@@ -1,22 +1,34 @@
-import React from "react";
+import React, { PureComponent } from "react";
 
-function Todo(props) {
-  if (!props.todo) {
-    return null;
+class Todo extends PureComponent{
+  handleDelete = () => {
+    const { onDeleteTodo, todo } = this.props;
+    onDeleteTodo(todo.id);
   }
-  return (
-    <div>
-      <input
-        type="checkbox"
-        name={props.todo.title}
-        id={props.todo.id}
-        onChange={props.completeHandler}
-      />
-      &nbsp;&nbsp;
-      <span className={props.todo.completed ? 'completed' : ''}>{props.todo.title}</span>&nbsp;&nbsp;
-      <u onClick={props.deleteTodo}>delete</u>
-    </div>
-  );
+
+  handleCheckboxClick = (event) => {
+    const {  todo, onComplete } = this.props;
+    onComplete(todo.id, event.target.checked)
+  }
+
+  render() {
+    const { todo } = this.props;
+    return (
+      <div>
+        <input
+          type="checkbox"
+          name={todo.title}
+          id={todo.id}
+          checked={todo.completed}
+          onChange={this.handleCheckboxClick}
+        />
+        &nbsp;&nbsp;
+        <span className={todo.completed ? 'completed' : ''}>{todo.title}</span>&nbsp;&nbsp;
+        <u onClick={this.handleDelete}>delete</u>
+      </div>
+    );
+  }
 }
 
 export default Todo;
+// TODO: add proptypes

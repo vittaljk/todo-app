@@ -4,11 +4,11 @@ import Todo from './Todo';
 export class TodoList extends Component {
     state = {
         todos: [
-            { id: 1, title: 'One'},
-            { id: 2, title: 'Two'},
-            { id: 3, title: 'Three'},
-            { id: 4, title: 'Four'},
-            { id: 5, title: 'Five'}
+            { id: 1, title: 'One', completed: false},
+            { id: 2, title: 'Two', completed: false},
+            { id: 3, title: 'Three', completed: false},
+            { id: 4, title: 'Four', completed: false},
+            { id: 5, title: 'Five', completed: false},
         ],
         addTodoText: ''
     }
@@ -17,7 +17,7 @@ export class TodoList extends Component {
         this.setState((state) => ({
           todos: [
             ...state.todos,
-            { id: state.todos.length + 1, title: state.addTodoText }
+            { id: Date.now(), title: state.addTodoText }
           ],
           addTodoText: ''
         }));
@@ -30,15 +30,17 @@ export class TodoList extends Component {
         });
     }
 
-    completeHandler = (id, e) => {
-        let todos = [ ...this.state.todos ];
-        todos.forEach(todo => {
+    completeTodo = (id, completed) => {
+        const { todos } = this.state;
+        // TODO: move it to function
+        const updatedTodos = todos.map(todo => {
             if (todo.id === id) {
-                todo.completed = e.target.checked;
+                return { ...todo, completed } ;
             }
+            return todo;
         });
         this.setState({
-            todos
+            todos: updatedTodos
         })
     }
 
@@ -47,7 +49,6 @@ export class TodoList extends Component {
             addTodoText: e.target.value
         })
     }
-    
     render() {
         return (
             <>
@@ -56,8 +57,8 @@ export class TodoList extends Component {
                         <Todo 
                             key={todo.id} 
                             todo={todo}
-                            deleteTodo={this.deleteTodo.bind(this, todo.id)}
-                            completeHandler={this.completeHandler.bind(this, todo.id)} 
+                            onDeleteTodo={this.deleteTodo}
+                            onComplete={this.completeTodo} 
                         />
                     ))}
                 </div>
